@@ -1,2 +1,0 @@
-#!/bin/bash
-nohup  /usr/local/python27/bin/python2.7 /gomeo2o/add_host_sjhl/ZabbixOp/manage.py runserver 0.0.0.0:9998 &
