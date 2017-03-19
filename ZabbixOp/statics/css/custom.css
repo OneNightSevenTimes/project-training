@@ -1,0 +1,14 @@
+.available{
+    background: #ff0000;
+}
+
+.edit-mode{
+    background-color: #c1e2b3;
+    padding: 8px;
+    text-decoration: none;
+    color: white;
+}
+
+.editing{
+    background-color: #f0ad4e;
+}

@@ -1,0 +1,240 @@
+{% extends "index.html" %}
+
+{% block content-panel %}
+    <div class='container-fluid'>
+      <h2 class='page-header'>Zabbix主机操作</h2>
+      <!--
+        选项卡：通过BS的类来控制选项卡的样式
+      -->
+      <ul class='nav nav-tabs'>
+        <li class='active'><a href='#tab1' data-toggle='tab'>添加主机</a></li>
+        <li><a href='#tab2' data-toggle='tab'>删除主机</a></li>
+        <li><a href='#tab3' data-toggle='tab'>更新主机</a></li>
+        <li><a href='#tab4' data-toggle='tab'>关联模板</a></li>
+        <li><a href='#tab5' data-toggle='tab'>关联主机组</a></li>
+      </ul>
+
+      <!--
+        选项卡的内容定义
+      -->
+      <div class='tab-content'>
+          <!--
+          添加主机操作
+          -->
+            <div class='tab-pane active' id='tab1'>
+                <div style="padding-top: 5%">
+                    <form action="" method="post" class="form-horizontal clearfix">
+                        {% csrf_token %}
+
+
+
+                    <div style="padding-bottom: 100px">
+                            <div class="form-group col-md-6" style="float: left;height: 80%;">
+                                <label for="inputEmail3" class="col-md-3 control-label">主机组：</label>
+                                <div class="col-md-8" >
+                                        {{ model.hostgroup }}
+                                    <div class="form-error">
+                                        {{ message.hostgroup }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="float: left;padding-left: 20px;padding-right: 20px;padding-top: 40px" >
+                               <p><button onclick="MoveToRight('#hostgroups','#hostgroup_select')" type="button">添加>></button></p>
+                               <button onclick="MoveToLeft('#hostgroup_select','#hostgroups')" type="button">移除<<</button>
+                            </div>
+
+                            <div style="float: left;width: 20%;padding-left: 10px">
+                               <select id="hostgroup_select" class="form-control m-b" size="12"  multiple>
+                               </select>
+                                <div class="form-error">
+                                        {{ message.hostgroup }}
+                                </div>
+                            </div>
+                    </div>
+
+                    <div style="padding-tom: 50px;">
+                         <div class="form-group col-md-6" style="float: left">
+                            <label for="inputEmail3" class="col-md-3 control-label">Template：</label>
+                            <div class="col-md-8">
+                                {{ model.template }}
+                                <div class="form-error">
+                                    {{ message.template }}
+                                </div>
+                            </div>
+                        </div>
+
+                         <div style="float: left;padding-left: 20px;padding-right: 20px;padding-top: 40px"">
+                            <div style="margin-right: " >
+                               <p><button onclick="MoveToRight('#templates','#template_select')" type="button">添加>></button></p>
+                               <p><button onclick="MoveToLeft('#template_select','#templates')" type="button">移除<<</button></p>
+                            </div>
+                        </div>
+
+
+                        <div style="float:left;width: 20%;padding-left: 10px">
+                            <div>
+                               <select id="template_select" class="form-control m-b" size="12"  multiple>
+
+                               </select>
+                                <div class="form-error">
+                                    {{ message.template }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail3" class="col-md-3 control-label">主机名：</label>
+                            <div class="col-md-8">
+                                {{ model.hostname }}
+                                <div class="form-error">
+                                    {{ message.hostname }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail3" class="col-md-3 control-label">IP：</label>
+                            <div class="col-md-8">
+                                {{ model.ip }}
+                                <div class="form-error">
+                                    {{ message.ip }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-offset-3 col-md-8">
+                                 <input type="button" onclick="OnSubmit('#hostgroup_select','#template_select','#hosts','#ips')" class="btn btn-primary no-radius" value="提 交">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+        </div>
+        <div class='tab-pane' id='tab2'>
+            <!--
+            删除主机操作
+            -->
+            <from class="form-horizontal" ole="form" method="post" acthod="">
+               <div id="delete_ip">
+                   <label >IP</label>
+                   <textarea class="form-control input-lg" name="delete_ips" id="focusedInput" rows="10" placeholder="填写Ip.."></textarea>
+                   <span class="help-block">
+                      Note. 每行仅填写一个IP,按行填入多个IP地址
+                   </span>
+               </div>
+                <div class="form-group">
+                     <button type="submit" class="btn btn-default" onclick="deleteIp('#delete_ip textarea')">提交</button>
+               </div>
+
+            </from>
+
+        </div>
+        <div class='tab-pane' id='tab3'><p>更新主机操作</p></div>
+        <div class='tab-pane' id='tab4'><p>关联模板操作</p></div>
+        <div class='tab-pane' id='tab5'><p>关联主机组操作</p></div>
+      </div>
+
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block bottom-js %}
+    <script src="/static/js/edit_row.js"></script>
+    <script src="/static/js/jquery-1.12.1.min.js"></script>
+<script>
+//提交要删除的IP
+
+function deleteIp(ips){
+    var Ips = $(ips).val();
+    if (Ips.length == parseInt(0)){
+        alert('要删除的IP地址不能为空')
+    }
+
+    //提交数据
+    $.ajax({
+        url: '{% url 'del_host' %}',
+        traditional: true,
+        type: 'POST',
+        data:{
+            'delete_ip': Ips
+        },
+        success:function(data){
+            var data = $.parseJSON(data);
+            if (data.result == 'falied'){
+                alert(data.message);
+            }else {
+                alert(data.result);
+            }
+        },
+        error:function(){
+            alert('执行失败');
+        }
+    })
+
+}
+//$(document).ready(deleteIp("#delete_ip textarea"))
+
+//提交添加主机操作
+function OnSubmit(hostgroup,templates,hosts,ips){
+    var HostGroupIds = []
+    var TemplateIds = []
+    var Ips = []
+    var Hosts = []
+    var Hosts = []
+    $(hostgroup + " option").each(function () {
+        var op = $(this);
+        HostGroupIds.push(op.val());
+    });
+    $(templates + " option").each(function () {
+        var op = $(this);
+        TemplateIds.push(op.val());
+    })
+    Ips.push($(ips).val());
+    Hosts.push($(hosts).val());
+    if(HostGroupIds.length == parseInt(0)){
+        alert('主机组不能为空');
+        return false
+    }else if(TemplateIds.length == parseInt(0)){
+        alert('Template不能为空');
+        return false
+    }else if($(ips).val() == ""){
+        alert('IP不能为空!');
+        return false
+    }
+
+    $.ajax({
+        url:'{% url 'add_host' %}',
+        traditional:true,
+        type:'POST',
+        data:{
+            'hostgroup':HostGroupIds,
+            'template':TemplateIds,
+            'hostname':Hosts,
+            'ip':Ips,
+        },
+        success:function(data){
+            var data = $.parseJSON(data)
+            if (data.error){
+                $.each(data.error,function(k,v){
+                    alert(k + ":" + v.toString());
+                })
+                console.log(data.error);
+            }else {
+                alert(JSON.stringify(data));
+                }
+
+            //window.location.href = '/zabbix/add_host_monitor'
+        },
+        error:function(){
+            alert('执行失败');
+        }
+    })
+
+}
+
+</script>
+{% endblock%}
