@@ -1,0 +1,29 @@
+├── bin 执行目录
+│ └── start.py	启动脚本
+├── config	配置文件目录
+│ └── settings.py	配置文件
+├── files	测试模式的文件目录
+│ ├── board.out
+│ ├── cpuinfo.out
+│ ├── disk.out
+│ ├── memory.out
+│ └── nic.out
+├── lib	库文件目录
+│ ├── error.log
+│ ├── logger_helper.py	记录日志
+│ ├── response.py	日志状态	字典用类封装
+│ └── run.log
+├── log
+├── src	业务逻辑处理目录
+│ ├── client.py	获取今日未采集资产主机列表，执行plugings目录下__init__.py下的server_info方法
+│ ├── plugins	基础组件
+│ │ ├── base.py
+│ │ ├── cpu.py
+│ │ ├── disk.py
+│ │ ├── __init__.py	导致配置文件中各采集内容模块，并执行execute方法
+│ │ ├── mem.py
+│ │ ├── nic.py
+│ │ 
+│ ├── scripts.py	判断用户选择模式，由start.py调用
+│ ├── test.py
+│ └── test.py.bak

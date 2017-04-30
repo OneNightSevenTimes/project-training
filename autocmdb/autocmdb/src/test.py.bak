@@ -1,0 +1,23 @@
+from src.plugins import disk
+from src.plugins import nic
+from config import settings
+
+def func(hostname):
+    disk_obj = disk.Diskplugin()
+    disk_info=disk_obj.execute()
+
+    nic_obj = nic.Nicplugin()
+    nic_info = nic_obj.execute()
+
+    ret = {'disk':disk_info.__dict__,'nic_info':nic_info.__dict__}
+    return ret
+
+if __name__ == '__main__':
+    if settings.Mode == 'AGENT':
+        v = func(None)
+        print(v)
+    else:
+        v = func('c1.com')
+        print(v)
+
+
